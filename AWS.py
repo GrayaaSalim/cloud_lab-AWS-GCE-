@@ -1,6 +1,6 @@
 import boto3
 import paramiko
-
+import time
 ## EC2 instance boto3
 def create_instance(ImageId):
     print("Create AWS instances..")
@@ -57,6 +57,7 @@ ec2 = boto3.resource('ec2')
 instance=ec2.Instance(BackendInstanceID)
 instance.wait_until_running('self',Filters=[{'Name':'instance-state-name','Values':['running']}])
 print ("instance is now running")
+time.sleep(30)
 runRemoteShellCommands(BackendInstanceID,'sudo systemctl start nginx')
 runRemoteShellCommands(BackendInstanceID,'sudo systemctl status nginx')
 allocate_ip_address(BackendInstanceID)
@@ -67,6 +68,7 @@ ec2 = boto3.resource('ec2')
 instance=ec2.Instance(FrontendInstanceID)
 instance.wait_until_running('self',Filters=[{'Name':'instance-state-name','Values':['running']}])
 print ("instance is now running")
+time.sleep(30)
 runRemoteShellCommands(FrontendInstanceID,'sudo systemctl start httpd')
 runRemoteShellCommands(FrontendInstanceID,'sudo systemctl status httpd')
 get_public_ip(FrontendInstanceID)
